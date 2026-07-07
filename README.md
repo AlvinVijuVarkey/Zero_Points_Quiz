@@ -1,88 +1,145 @@
-# 🎯 '0' Points Quiz Event Management Application
+# 🎯 Zero Points Quiz Event Management Application
 
-Welcome to the **'0' Points Quiz System** — a premium, interactive, single-page web application designed for presenters and event coordinators to digitally manage the unique '0' Points Quiz. 
+[![Tech Stack](https://img.shields.io/badge/Stack-HTML5%20|%20CSS3%20|%20JavaScript%20(ES6%2B)-blue.svg)](#)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](#)
+[![Deployment](https://img.shields.io/badge/Deployment-Localhost%20|%20GitHub%20Pages-orange.svg)](#)
 
-Unlike traditional quizzes, teams start with a high score (1000 points) and compete to **lower** their score down to exactly 0 (or the lowest possible) by answering questions correctly.
+A modern, responsive, and fully client-side web application developed for managing the **Zero Points Quiz**, a tournament-style quiz competition where the objective is to achieve the **lowest score**. The application provides an intuitive interface for quiz coordinators to manage teams, control gameplay, update scores in real time, and present the quiz seamlessly during live events.
+
+Built entirely with **HTML5, CSS3, and Vanilla JavaScript (ES6+)**, the application requires no backend, database, or additional frameworks. All game data is stored locally in the browser using **Local Storage**, allowing the quiz to continue even after a page refresh.
 
 ---
 
 ## ✨ Features
 
-- **🎮 Seamless Presenter View**: A gorgeous, interactive 4x4 quiz board grid containing 4 categories (**Tech, Sports, Rajagiri, Entertainment**) and 4 difficulty tiers (**20, 40, 60, and 80 points**).
-- **📋 Team Registration & Setup**: Quickly register teams (3-4 members per team) or auto-generate demo teams for instant testing.
-- **🏆 Live Leaderboard**: A dynamic, real-time leaderboard sidebar that automatically ranks teams from lowest score (1st place) to highest score. The active team currently in rotation is highlighted with a pulse-glow indicator.
-- **🔄 Smart Pass & Turn Logic**: 
-  - Standard rotation automatically advances to the next team after a cell is resolved.
-  - Interactive passing allows questions to be passed sequentially to other teams.
-  - Pass history/chains are visually displayed in the question overlay.
-- **⚙️ Admin Dashboard Drawer**: Floating drawer for controllers to:
-  - Add/remove teams mid-game.
-  - Manually override active turns.
-  - Manually adjust (add or subtract) scores for any team to handle special rules, penalties, or custom bonuses.
-  - Reset the entire game state.
-- **💾 Local Persistence**: Game state is automatically synchronized with the browser's `localStorage` so that refreshing the page or closing the window never loses game progress.
+- **Interactive Quiz Board**
+  - 4×4 question grid with four categories and four point values.
+  - Optimized for projector and large-screen presentations.
+
+- **Real-Time Leaderboard**
+  - Automatically updates team rankings after every question.
+  - Teams are ranked in ascending order since the objective is to reach **0 points**.
+
+- **Question Pass Management**
+  - Supports sequential passing of unanswered questions.
+  - Prevents duplicate attempts using an internal pass tracking system.
+  - Handles score updates accurately after each pass.
+
+- **Admin Control Panel**
+  - Add or remove teams during the event.
+  - Modify team scores manually.
+  - Change the active team's turn.
+  - Reset the entire game when required.
+
+- **Persistent Game State**
+  - Automatically saves game progress using browser Local Storage.
+  - Restores teams, scores, and game state after refreshing the page.
+
+- **Serverless Deployment**
+  - No installation or backend configuration required.
+  - Can be executed directly from the browser or hosted using any static web server.
+
+---
+
+## 🎮 Game Rules
+
+- Every team begins with **1000 points**.
+- A **correct answer** deducts the question's point value from the team's score.
+- An **incorrect answer** adds the question's point value to the team's score.
+- Questions may be passed to the next team if unanswered.
+- The team with the **lowest score** at the end of the quiz is declared the winner.
+
+---
+
+## 📂 Quiz Categories
+
+The application currently supports four quiz categories:
+
+- 💻 Technology
+- ⚽ Sports
+- 🎓 Rajagiri
+- 🎬 Entertainment
+
+Additional categories and questions can be added easily by modifying the JavaScript data files.
 
 ---
 
 ## 🛠️ Technology Stack
 
-- **Markup**: Semantic HTML5.
-- **Styling**: Vanilla CSS3 utilizing CSS custom variables (HSL palette), glassmorphism, responsive grid layout, and keyframe glows.
-- **Fonts & Icons**: Google Fonts (*Outfit*), FontAwesome Icons (CDN).
-- **Logic**: Clean, modern ES6+ JavaScript (no heavy frameworks or dependencies, allowing the project to run entirely client-side).
+| Technology | Purpose |
+|------------|---------|
+| HTML5 | Semantic page structure |
+| CSS3 | Responsive layouts, animations, glassmorphism UI |
+| JavaScript (ES6+) | Game logic, state management, rendering |
+| Local Storage API | Persistent browser-based data storage |
+| Google Fonts (Outfit) | Typography |
+| Font Awesome | Icons |
 
 ---
 
-## 🚀 How to Run the App (Locally)
+## 📁 Project Structure
 
-Since the application is serverless, you do not need to install complex dependencies.
+```
+Zero_Points_Quiz/
+│
+├── index.html
+├── style.css
+├── script.js
+├── assets/
+│   ├── icons/
+│   ├── fonts/
+│   └── images/
+└── README.md
+```
 
-### Option A: Double-Click (Offline)
-1. Navigate to the project folder.
-2. Double-click the `index.html` file to open it directly in Google Chrome, Microsoft Edge, Mozilla Firefox, or Safari.
+---
 
-### Option B: Local Server (Recommended for local hosting)
-If you have Python installed, you can serve the directory:
+## 🚀 Getting Started
+
+### Clone the Repository
+
 ```bash
-# In terminal, navigate to the folder:
-cd zero-points-quiz
-# Start local server:
+git clone https://github.com/your-username/Zero_Points_Quiz.git
+cd Zero_Points_Quiz
+```
+
+### Run the Application
+
+Simply open the `index.html` file in any modern web browser.
+
+Alternatively, start a local development server:
+
+```bash
 python -m http.server 8000
 ```
-Then open your browser and go to `http://localhost:8000`.
+
+Then open:
+
+```
+http://localhost:8000
+```
 
 ---
 
-## 🎮 Game Rules & Scoring
+## 🎯 Highlights
 
-1. **Initial Score**: Every registered team starts with **1000 points**.
-2. **Correct Answer**: Subtracts the question's point value (e.g. 1000 - 80 = 920).
-3. **Incorrect Answer**: Adds the question's point value (e.g. 1000 + 80 = 1080).
-4. **Question Card Status**: Once a question is answered correctly (or locked manually without points), the card is marked with a checkmark and locked.
-5. **Passing**: If a team passes, the coordinator clicks the "Pass" button, which shifts the attempt to the next team in line. Points are only awarded/deducted when someone answers or the question is closed.
-
----
-
-## 🐙 How to Upload to GitHub
-
-Follow these simple steps to upload this codebase to your own GitHub profile:
-
-1. **Open your Git terminal** and initialize the repository:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit: '0' Points Quiz Board"
-   ```
-2. **Create a new repository** on [GitHub](https://github.com/new). Name it something like `zero-points-quiz`.
-3. **Link your local repository and push**:
-   *(Replace `<username>` with your GitHub username)*
-   ```bash
-   git branch -M main
-   git remote add origin https://github.com/<username>/zero-points-quiz.git
-   git push -u origin main
-   ```
-4. **Take screenshots** of your registration page, the main board during gameplay, and the admin panel, upload them to a folder (e.g., `screenshots/`), and embed them in this README!
+- Pure Vanilla JavaScript implementation
+- Responsive user interface
+- Fully offline capable
+- No external backend or database
+- Persistent game state using Local Storage
+- Easy to customize with new teams, categories, and questions
 
 ---
 
-*Designed & developed to provide a premium, modern, and exciting tournament quiz experience!*
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 👨‍💻 Author
+
+**Alvin Viju Varkey**
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
