@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>'0' Points Quiz System</title>
+  <meta name="description" content="Digital game management system for the '0' Points Quiz Event. Features live leaderboards, turn management, question passing, and admin overrides.">
+  <!-- Fonts and Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-theme">
+  <!-- Dynamic Glow Effects -->
+  <div class="glow-bg"></div>
+
+  <!-- Main Application Wrapper -->
+  <div id="app" class="app-container">
+    
+    <!-- Top Header Bar -->
+    <header class="app-header">
+      <div class="logo-area">
+        <i class="fa-solid fa-circle-nodes logo-icon"></i>
+        <h1>'0' Points <span class="accent-text">Quiz Board</span></h1>
+      </div>
+      <div class="header-controls">
+        <div class="active-info">
+          <span class="info-label">Active Turn:</span>
+          <span id="header-active-team" class="info-value">No teams loaded</span>
+        </div>
+        <button id="toggle-admin-btn" class="btn btn-secondary" onclick="toggleAdminDrawer(true)">
+          <i class="fa-solid fa-user-shield"></i> Admin Control
+        </button>
+      </div>
+    </header>
+
+    <!-- Setup / Registration View -->
+    <div id="setup-view" class="setup-overlay active">
+      <div class="setup-card">
+        <div class="setup-header">
+          <i class="fa-solid fa-users-gear setup-icon"></i>
+          <h2>Quiz Team Registration</h2>
+          <p>Register quiz teams (3-4 members each) to get started.</p>
+        </div>
+        
+        <div class="setup-content">
+          <!-- Add Team Form -->
+          <form id="add-team-form" onsubmit="handleRegisterTeam(event)" class="form-container">
+            <div class="form-group">
+              <label for="reg-team-name"><i class="fa-solid fa-signature"></i> Team Name</label>
+              <input type="text" id="reg-team-name" placeholder="e.g. Alpha Coders" required>
+            </div>
+            <div class="form-group">
+              <label for="reg-members"><i class="fa-solid fa-users"></i> Team Members (3-4 members, comma-separated)</label>
+              <input type="text" id="reg-members" placeholder="e.g. John Doe, Jane Smith, Alan Turing" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+              <i class="fa-solid fa-plus"></i> Add Team
+            </button>
+          </form>
+
+          <!-- Divider -->
+          <div class="setup-divider">
+            <span>or</span>
+          </div>
+
+          <!-- Quick Action Auto Setup -->
+          <div class="quick-actions">
+            <button onclick="handleAutoRegister()" class="btn btn-accent btn-block">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Generate Demo Teams
+            </button>
+          </div>
+
+          <!-- Registered Teams Preview -->
+          <div class="registered-teams-section">
+            <h3>Registered Teams (<span id="registered-count">0</span>)</h3>
+            <div id="registered-teams-list" class="registered-teams-list">
+              <div class="empty-state">No teams registered yet.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="setup-footer">
+          <button id="start-game-btn" class="btn btn-success btn-large btn-block" disabled onclick="startGame()">
+            <i class="fa-solid fa-play"></i> Start Quiz Game
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Game Board Grid + Sidebar Leaderboard -->
+    <main class="game-layout">
+      <!-- Grid Panel -->
+      <section class="board-panel">
+        <div class="grid-container">
+          <!-- Headers -->
+          <div class="grid-header tech-header">
+            <i class="fa-solid fa-microchip"></i>
+            <span>Tech</span>
+          </div>
+          <div class="grid-header sports-header">
+            <i class="fa-solid fa-volleyball"></i>
+            <span>Sports</span>
+          </div>
+          <div class="grid-header rajagiri-header">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span>Rajagiri</span>
+          </div>
+          <div class="grid-header ent-header">
+            <i class="fa-solid fa-film"></i>
+            <span>Entertainment</span>
+          </div>
+
+          <!-- Cards will be generated dynamically by JS for 20, 40, 60, 80 points -->
+          <!-- Row 20 -->
+          <div class="grid-card tech-card" data-category="tech" data-points="20" id="card-tech-20" onclick="openQuestion('tech', 20)">
+            <span class="points-label">20</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card sports-card" data-category="sports" data-points="20" id="card-sports-20" onclick="openQuestion('sports', 20)">
+            <span class="points-label">20</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card rajagiri-card" data-category="rajagiri" data-points="20" id="card-rajagiri-20" onclick="openQuestion('rajagiri', 20)">
+            <span class="points-label">20</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card ent-card" data-category="entertainment" data-points="20" id="card-entertainment-20" onclick="openQuestion('entertainment', 20)">
+            <span class="points-label">20</span>
+            <span class="status-indicator"></span>
+          </div>
+
+          <!-- Row 40 -->
+          <div class="grid-card tech-card" data-category="tech" data-points="40" id="card-tech-40" onclick="openQuestion('tech', 40)">
+            <span class="points-label">40</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card sports-card" data-category="sports" data-points="40" id="card-sports-40" onclick="openQuestion('sports', 40)">
+            <span class="points-label">40</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card rajagiri-card" data-category="rajagiri" data-points="40" id="card-rajagiri-40" onclick="openQuestion('rajagiri', 40)">
+            <span class="points-label">40</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card ent-card" data-category="entertainment" data-points="40" id="card-entertainment-40" onclick="openQuestion('entertainment', 40)">
+            <span class="points-label">40</span>
+            <span class="status-indicator"></span>
+          </div>
+
+          <!-- Row 60 -->
+          <div class="grid-card tech-card" data-category="tech" data-points="60" id="card-tech-60" onclick="openQuestion('tech', 60)">
+            <span class="points-label">60</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card sports-card" data-category="sports" data-points="60" id="card-sports-60" onclick="openQuestion('sports', 60)">
+            <span class="points-label">60</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card rajagiri-card" data-category="rajagiri" data-points="60" id="card-rajagiri-60" onclick="openQuestion('rajagiri', 60)">
+            <span class="points-label">60</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card ent-card" data-category="entertainment" data-points="60" id="card-entertainment-60" onclick="openQuestion('entertainment', 60)">
+            <span class="points-label">60</span>
+            <span class="status-indicator"></span>
+          </div>
+
+          <!-- Row 80 -->
+          <div class="grid-card tech-card" data-category="tech" data-points="80" id="card-tech-80" onclick="openQuestion('tech', 80)">
+            <span class="points-label">80</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card sports-card" data-category="sports" data-points="80" id="card-sports-80" onclick="openQuestion('sports', 80)">
+            <span class="points-label">80</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card rajagiri-card" data-category="rajagiri" data-points="80" id="card-rajagiri-80" onclick="openQuestion('rajagiri', 80)">
+            <span class="points-label">80</span>
+            <span class="status-indicator"></span>
+          </div>
+          <div class="grid-card ent-card" data-category="entertainment" data-points="80" id="card-entertainment-80" onclick="openQuestion('entertainment', 80)">
+            <span class="points-label">80</span>
+            <span class="status-indicator"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Leaderboard Sidebar -->
+      <aside class="leaderboard-panel">
+        <div class="leaderboard-header">
+          <i class="fa-solid fa-trophy leaderboard-icon"></i>
+          <h2>Leaderboard</h2>
+          <span class="leaderboard-subtitle">Target: 0 Points</span>
+        </div>
+        <div id="leaderboard-list" class="leaderboard-list">
+          <!-- Populated dynamically -->
+        </div>
+      </aside>
+    </main>
+
+    <!-- Floating Admin Control Drawer -->
+    <div id="admin-drawer" class="admin-drawer">
+      <div class="drawer-header">
+        <h2><i class="fa-solid fa-user-gear"></i> Admin Dashboard</h2>
+        <button class="btn-close" onclick="toggleAdminDrawer(false)"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      
+      <div class="drawer-content">
+        <!-- Section: Active Turn Manager -->
+        <div class="admin-section">
+          <h3><i class="fa-solid fa-arrows-spin"></i> Direct Turn Override</h3>
+          <div class="form-group">
+            <label for="admin-select-turn">Set Active Team:</label>
+            <select id="admin-select-turn" class="form-control">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <button onclick="handleOverrideTurn()" class="btn btn-secondary btn-block">Set Turn</button>
+        </div>
+
+        <!-- Section: Score Corrections -->
+        <div class="admin-section">
+          <h3><i class="fa-solid fa-pen-to-square"></i> Adjust Scores</h3>
+          <div class="form-group">
+            <label for="admin-select-team">Select Team:</label>
+            <select id="admin-select-team" class="form-control">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="admin-points-val">Points Value:</label>
+            <input type="number" id="admin-points-val" class="form-control" value="20" min="5" step="5">
+          </div>
+          <div class="btn-row">
+            <button onclick="handleAdjustScore('sub')" class="btn btn-success flex-1">
+              <i class="fa-solid fa-minus"></i> Subtract (Correct)
+            </button>
+            <button onclick="handleAdjustScore('add')" class="btn btn-danger flex-1">
+              <i class="fa-solid fa-plus"></i> Add (Incorrect)
+            </button>
+          </div>
+        </div>
+
+        <!-- Section: Manage Teams -->
+        <div class="admin-section">
+          <h3><i class="fa-solid fa-user-plus"></i> Manage Teams</h3>
+          <form onsubmit="handleAdminAddTeam(event)" class="form-container">
+            <div class="form-group">
+              <label for="admin-team-name">New Team Name</label>
+              <input type="text" id="admin-team-name" class="form-control" placeholder="e.g. Delta Force" required>
+            </div>
+            <div class="form-group">
+              <label for="admin-team-members">Members (comma-separated)</label>
+              <input type="text" id="admin-team-members" class="form-control" placeholder="e.g. Alice, Bob" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Add Team</button>
+          </form>
+          
+          <div class="admin-team-list-wrapper">
+            <label>Current Teams (Click <i class="fa-solid fa-trash"></i> to Remove):</label>
+            <div id="admin-teams-list" class="admin-teams-list">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: System Reset -->
+        <div class="admin-section dev-section">
+          <h3><i class="fa-solid fa-triangle-exclamation"></i> Danger Zone</h3>
+          <button onclick="handleResetGame()" class="btn btn-danger btn-block">
+            <i class="fa-solid fa-trash-arrow-up"></i> Full Game Reset
+          </button>
+          <button onclick="handleToggleRegisterView(true)" class="btn btn-secondary btn-block" style="margin-top: 10px;">
+            <i class="fa-solid fa-id-card"></i> Return to Setup Screen
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backdrop for Drawer and Modal -->
+    <div id="modal-backdrop" class="modal-backdrop" onclick="closeActiveOverlays()"></div>
+
+    <!-- Interactive Question Modal -->
+    <div id="question-modal" class="question-modal">
+      <div class="modal-header">
+        <div class="q-meta">
+          <span id="modal-category" class="q-cat">Tech</span>
+          <span id="modal-points" class="q-pts">40 Points</span>
+        </div>
+        <button class="btn-close" onclick="closeQuestionModal()"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="turn-announcement">
+          <span class="pulse-indicator"></span>
+          <span>Current Attempt: <strong id="modal-active-team">Team Alpha</strong></span>
+          <span id="modal-pass-chain" class="pass-chain"></span>
+        </div>
+
+        <div class="question-container">
+          <p id="modal-question-text">Loading question...</p>
+        </div>
+
+        <div class="answer-container">
+          <button id="reveal-answer-btn" class="btn btn-secondary btn-sm" onclick="toggleRevealAnswer()">
+            <i class="fa-solid fa-eye"></i> Show Correct Answer
+          </button>
+          <div id="modal-answer-box" class="answer-box">
+            <span class="answer-heading">Answer:</span>
+            <span id="modal-answer-text">Loading...</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <!-- Pass Actions -->
+        <button id="modal-pass-btn" class="btn btn-accent flex-1" onclick="handlePassQuestion()">
+          <i class="fa-solid fa-right-long"></i> Pass Question
+        </button>
+        
+        <!-- Score Resolutions -->
+        <button onclick="resolveQuestionResult(true)" class="btn btn-success flex-1">
+          <i class="fa-solid fa-check"></i> Correct
+        </button>
+        <button onclick="resolveQuestionResult(false)" class="btn btn-danger flex-1">
+          <i class="fa-solid fa-xmark"></i> Incorrect
+        </button>
+
+        <!-- No one answered / Discard -->
+        <button class="btn btn-secondary" onclick="resolveQuestionResult(null)" title="Discard this question (no points changed, locks cell)">
+          <i class="fa-solid fa-ban"></i> Lock Cell (No Points)
+        </button>
+      </div>
+    </div>
+
+    <!-- App Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+  </div>
+
+  <!-- Load Global Question Bank and App Logic -->
+  <script src="questions.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
